@@ -1,4 +1,5 @@
 import * as UserService from "../services/user.service.js";
+import { hashPassword } from "../utils/hash.js";
 
 export const ctrlGetAllUsers = async (req, res) => {
     const users = await UserService.getAllUsers();
@@ -28,8 +29,14 @@ export const ctrlGetUserById = async (req, res) => {
 }
 
 export const ctrlCreateUser = async (req, res) => {
-    const data = req.body;
-    const user = await UserService.createUser(data);
+    const {
+        password,
+        ...userData
+    } = req.body;
+
+    const hashedPassword = await hashPassword(password);
+
+    const user = await UserService.createUser({ ...userData, password: hashedPassword });
 
     if (!user) {
         res.status(500).send({

@@ -5,7 +5,7 @@ import sequelize from "./src/config/db.js";
 sequelize.authenticate().then(() => {
     console.log("Database connected...");
 
-    sequelize.sync().then(() => {
+    sequelize.sync({ alter: true }).then(() => {
         console.log("Database synced...");
     
         app.listen(env.PORT, () => {
